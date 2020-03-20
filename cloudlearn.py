@@ -3,17 +3,23 @@ import json
 import os
 import requests
 import re
+import time
 from subprocess import call
-import sys
 
-# program path
-path = 'C:/Users/sy/Desktop/云学习/第2周/'
-# path = os.getcwd()
+# downloadPath = os.getcwd()
 
 # ===============
 # X-DT-accessToken
-# enter your cookie here！
 cookie = ""
+
+# weekNum第几周
+weekNum = 5
+
+# 1308 初二
+# 1307 初一
+gradeCode = 1307
+
+downloadPath = 'C:/Users/sy/Desktop/云学习'
 # ===============
 
 classListPostHeaders = {
@@ -61,7 +67,8 @@ corseDetailGetHeaders = {
     'X-DT-version': '1.7.0'
 }
 
-# 传统下载，太慢了
+
+# 传统下载，太慢了，已经废弃
 def download(download_url, filepath, filename):
     r = requests.get(download_url, stream=True)
     p = filepath + '/' + filename
@@ -73,10 +80,10 @@ def download(download_url, filepath, filename):
     f.close()
 
 
-def mkdir(path):
-    folder = os.path.exists(path)
+def mkdir(p):
+    folder = os.path.exists(p)
     if not folder:
-        os.makedirs(path)
+        os.makedirs(p)
         print("---  new folder...  ---:")
     else:
         print("---  There is this folder!  ---")
@@ -88,12 +95,12 @@ def callIDM(downloadUrl, filepath, filename):
     IDMpath = "D:/Internet Download Manager/IDMan.exe"
     call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath, '/n'])
     print("IDM downloading...\n")
+    # time.sleep(10)
 
 
 # 文件名修改
 def reFilename(name):
     name = name.replace('?', '？')
-
     return name
 
 
@@ -102,11 +109,13 @@ def downloadCourseFiles(data):
     # courseName：课程名称
     subjectName = data['data']['subjectName']
     courseName = data['data']['courseName']
-
-    # 建立文件夹结构
-    newdirPath = path + subjectName
+    if subjectName != "数学":
+        return 0
+    # 建立文件夹结
+    newdirPath = downloadPath + '第' + str(weekNum) + '周/'
+    newdirPath = newdirPath + subjectName + '/'
     mkdir(newdirPath)
-    newdirPath = path + subjectName + '/' + courseName + '/'
+    newdirPath = newdirPath + courseName + '/'
     mkdir(newdirPath)
     # 课程中文件列表
     videoList = data['data']['courseResourceVOList']
@@ -115,6 +124,8 @@ def downloadCourseFiles(data):
         idata = videoList[i]
         downloadFileName = reFilename(idata['resourceName'])
         downloadUrl = idata['resourceUrl']
+
+        # download(downloadUrl, newdirPath, downloadFileName)
         # 调用IDM下载
         callIDM(downloadUrl, newdirPath, downloadFileName)
 
@@ -126,7 +137,7 @@ def getCourseDetail(course):
     return data
 
 
-postdata = {'weekNum': 2, 'gradeCode': 1308}
+postdata = {'weekNum': weekNum, 'gradeCode': gradeCode}
 
 classList_url = "https://class-api.3ren.cn/cms-center/xicheng/kebiao/list"
 
