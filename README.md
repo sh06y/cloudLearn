@@ -1,7 +1,7 @@
 # cloudLearn
  
-下载西城区研修学院课程文件的爬虫
+一键下载西城区研修学院课程文件
 
-需要手动输入cookie
+3ren.py => https://class.3ren.cn/um/xicheng/
 
-自己随便敲的，写的不咋地
+etiantian.py => https://xicheng.etiantian.com/
