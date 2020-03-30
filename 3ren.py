@@ -13,13 +13,13 @@ from subprocess import call
 cookie = ""
 
 # weekNum第几周
-weekNum = 5
+chooseWeek = [7]
 
 # 1308 初二
 # 1307 初一
-gradeCode = 1307
+chooseGrade = [1307]
 
-downloadPath = 'C:/Users/sy/Desktop/云学习'
+downloadPath = "C:/Users/sy/Downloads/cloud"
 # ===============
 
 classListPostHeaders = {
@@ -92,10 +92,11 @@ def mkdir(p):
 # 调用IDM下载
 def callIDM(downloadUrl, filepath, filename):
     print("下载链接：", downloadUrl, "下载目录：", filepath, "文件名称：", filename)
-    IDMpath = "D:/Internet Download Manager/IDMan.exe"
+    IDMpath = "C:\Program Files (x86)\Internet Download Manager\IDMan.exe"
     call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath, '/n'])
     print("IDM downloading...\n")
-    # time.sleep(10)
+    # 最好加上这个
+    time.sleep(10)
 
 
 # 文件名修改
@@ -104,13 +105,13 @@ def reFilename(name):
     return name
 
 
-def downloadCourseFiles(data):
+def downloadCourseFiles(data,weekNum):
     # subjectName：科目
     # courseName：课程名称
     subjectName = data['data']['subjectName']
     courseName = data['data']['courseName']
-    if subjectName != "数学":
-        return 0
+    # if subjectName != "数学":
+    #     return 0
     # 建立文件夹结
     newdirPath = downloadPath + '第' + str(weekNum) + '周/'
     newdirPath = newdirPath + subjectName + '/'
@@ -137,23 +138,31 @@ def getCourseDetail(course):
     return data
 
 
-postdata = {'weekNum': weekNum, 'gradeCode': gradeCode}
+def getCourseList(weekNum,gradeCode):
 
-classList_url = "https://class-api.3ren.cn/cms-center/xicheng/kebiao/list"
+    postdata = {'weekNum': weekNum, 'gradeCode': gradeCode}
 
-# 获取课程列表，转换成json格式
-classList_Data = requests.post(classList_url, data=json.dumps(postdata), headers=classListPostHeaders)
-classList_Data = json.loads(classList_Data.text)
-# courseList为列表格式
-courseList = classList_Data['data']
-for i in range(0, len(courseList)):
-    iCourseData = courseList[i]
-    coursePageUrl = iCourseData['courseUrl']
+    classList_url = "https://class-api.3ren.cn/cms-center/xicheng/kebiao/list"
 
-    # 正则提出链接中的课程ID
-    pattern = re.compile(r"(?<=course/)\d+\.?\d*")
-    courseID = pattern.findall(coursePageUrl)
-    courseID = courseID[0]
-    courseDetailData = getCourseDetail(courseID)
-    # print(courseDetailData)
-    downloadCourseFiles(courseDetailData)
+    # 获取课程列表，转换成json格式
+    classList_Data = requests.post(classList_url, data=json.dumps(postdata), headers=classListPostHeaders)
+    classList_Data = json.loads(classList_Data.text)
+    # courseList为列表格式
+    courseList = classList_Data['data']
+    for i in range(0, len(courseList)):
+        iCourseData = courseList[i]
+        coursePageUrl = iCourseData['courseUrl']
+
+        # 正则提出链接中的课程ID
+        pattern = re.compile(r"(?<=course/)\d+\.?\d*")
+        courseID = pattern.findall(coursePageUrl)
+        courseID = courseID[0]
+        courseDetailData = getCourseDetail(courseID)
+        # print(courseDetailData)
+        downloadCourseFiles(courseDetailData,weekNum)
+
+
+if __name__ == "__main__":
+    for grade in chooseGrade:
+        for week in chooseWeek:
+            getCourseList(week, grade)
