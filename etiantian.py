@@ -7,16 +7,19 @@ import re
 from subprocess import call
 
 # Authorization
-cookie = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXRhaWwiOnsidXNlcklkIjoxMDA3MTI1NDE5LCJ1c2VyTmFtZSI6IjAxOGN6dDAwNyIsInBhc3N3b3JkIjoiIiwidXNlcklkZW50aXR5IjozLCJlbmFibGUiOjEsInNjaG9vbFVzZXJJZCI6MCwic2Nob29sSWQiOjAsInNjaG9vbFVzZXJSZWYiOm51bGwsInNjaG9vbEdyb3VwSWQiOm51bGwsInJvbGVzIjpbNV0sInVybExpc3QiOm51bGx9LCJleHAiOjE1ODQ4MDQ0MDcsInVzZXJfbmFtZSI6IjAxOGN6dDAwNyIsImp0aSI6IjNkMDBiYTk0LWVkYWEtNDdhNS1hZDNhLTk3NTI1YzE5MzA2MyIsImNsaWVudF9pZCI6IkQ2QzU3OEVERkVBNzBBNzc0MDlERjE4MDI0NEQxRUI3Iiwic2NvcGUiOlsiYWxsIiwid2ViIiwibW9iaWxlIl19.IlBIG7k4T5sp8jIu5_qG-ibywDRnN1NKRbNmZIj67pk'
+cookie = ''
 
-downloadPath = 'C:/Users/sy/Desktop/云学习'
+downloadPath = "Z:/学习/学校/初中/知行云课堂/初三/物理"
 
 subjectNum = {
-    '数学': 2
+    2: '数学',
+    3: '英语',
+    4: '物理'
+
 }
 
-chooseGrade = 4
-chooseSubject = 2
+chooseGrade = [4]
+chooseSubject = [4]
 
 courseListGet = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -54,7 +57,7 @@ courseDetailGet = {
 # 调用IDM下载
 def callIDM(downloadUrl, filepath, filename):
     print("下载链接：", downloadUrl, "下载目录：", filepath, "文件名称：", filename)
-    IDMpath = "D:/Internet Download Manager/IDMan.exe"
+    IDMpath = "C:\Program Files (x86)\Internet Download Manager\IDMan.exe"
     call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath, '/n'])
     print("IDM downloading...\n")
 
@@ -72,11 +75,11 @@ def getCourseDetail(courseID):
     data = requests.get(requestUrl, params=requestData, headers=courseDetailGet)
     data = json.loads(data.text)['data']
     name = data['resourceName']+'.mp4'
-    introduction = data['introduction']
+    # introduction = data['introduction']
     videoUrl = data['mp4URL']
     # print(videoUrl)
     callIDM(videoUrl, downloadPath, name)
-    time.sleep(5)
+    time.sleep(10)
 
 
 def getCourseList(gradeID, subjectID):
@@ -95,4 +98,7 @@ def getCourseList(gradeID, subjectID):
         getCourseDetail(i['resourceId'])
 
 
-getCourseList(chooseGrade, chooseSubject)
+if __name__ == "__main__":
+    for grade in chooseGrade:
+        for subject in chooseSubject:
+            getCourseList(grade, subject)
