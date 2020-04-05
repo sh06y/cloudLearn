@@ -90,9 +90,12 @@ def downloadCourseFiles(data,weekNum):
         downloadFileName = reFilename(idata['resourceName'])
         downloadUrl = idata['resourceUrl']
 
-        # download(downloadUrl, newdirPath, downloadFileName)
-        # 调用IDM下载
-        callIDM(downloadUrl, newdirPath, downloadFileName)
+        # 判断文件是否存在,不存在就下载
+        if not os.access(newdirPath + downloadFileName, os.F_OK):
+            # 调用IDM下载
+            # download(downloadUrl, newdirPath, downloadFileName)
+            callIDM(downloadUrl, newdirPath, downloadFileName)
+        
 
 
 def getCourseDetail(course):
