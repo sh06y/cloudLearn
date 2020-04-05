@@ -10,62 +10,26 @@ from subprocess import call
 
 # ===============
 # X-DT-accessToken
-cookie = ""
+# cookie = ""
 
 # weekNum第几周
-chooseWeek = [7]
+# chooseWeek = [7]
 
 # 1308 初二
 # 1307 初一
-chooseGrade = [1307]
+# chooseGrade = [1307]
 
-downloadPath = "C:/Users/sy/Downloads/cloud"
+downloadPath = "C:/Users/sy/Downloads/cloud/"
 # ===============
 
-classListPostHeaders = {
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
-    'Action-Type': 'json',
-    'Authorization': 'Basic c2FucmVuLXN0dWRlbnQtcGM6TWJuMjJ1eEduWXkxR3B2VWRw',
-    'Connection': 'keep-alive',
-    'Content-Length': '30',
-    'Content-Type': 'application/json',
-    'DNT': '1',
-    'Host': 'class-api.3ren.cn',
-    'Origin': 'https://class.3ren.cn',
-    'Referer': 'https://class.3ren.cn/um/xicheng-schedule.do?ynXicheng=1',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-site',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53'
-                  '7.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
-    'X-DT-accessToken': cookie,
-    'X-DT-clientId': 'sanren-student-pc',
-    'X-DT-Passport': '',
-    'X-DT-version': '1.7.0'
-}
+gradeList = """
+对照表：
 
-corseDetailGetHeaders = {
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
-    'Action-Type': 'json',
-    'Authorization': 'Basic c2FucmVuLXN0dWRlbnQtcGM6TWJuMjJ1eEduWXkxR3B2VWRw',
-    'Connection': 'keep-alive',
-    'Content-Type': 'application/json',
-    'DNT': '1',
-    'Host': 'class-api.3ren.cn',
-    'Origin': 'https://class.3ren.cn',
-    'Referer': 'https://class.3ren.cn/um/class/course/4071855977039847429/view.do?ynXicheng=1',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': "same-site",
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/79.0.3945.130 Safari/537.36',
-    'X-DT-accessToken': cookie,
-    'X-DT-clientId': 'sanren-student-pc',
-    'X-DT-Passport': '',
-    'X-DT-version': '1.7.0'
-}
+初二：1308
+初一：1307
+
+"""
+
 
 
 # 传统下载，太慢了，已经废弃
@@ -132,6 +96,27 @@ def downloadCourseFiles(data,weekNum):
 
 
 def getCourseDetail(course):
+    corseDetailGetHeaders = {
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
+        'Action-Type': 'json',
+        'Authorization': 'Basic c2FucmVuLXN0dWRlbnQtcGM6TWJuMjJ1eEduWXkxR3B2VWRw',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
+        'DNT': '1',
+        'Host': 'class-api.3ren.cn',
+        'Origin': 'https://class.3ren.cn',
+        'Referer': 'https://class.3ren.cn/um/class/course/4071855977039847429/view.do?ynXicheng=1',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': "same-site",
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/79.0.3945.130 Safari/537.36',
+        'X-DT-accessToken': cookie,
+        'X-DT-clientId': 'sanren-student-pc',
+        'X-DT-Passport': '',
+        'X-DT-version': '1.7.0'
+    }
     url = "https://class-api.3ren.cn/toolkits-center/course/detail?courseId="
     data = requests.get(url + course, headers=corseDetailGetHeaders)
     data = json.loads(data.text)
@@ -139,7 +124,28 @@ def getCourseDetail(course):
 
 
 def getCourseList(weekNum,gradeCode):
-
+    classListPostHeaders = {
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
+        'Action-Type': 'json',
+        'Authorization': 'Basic c2FucmVuLXN0dWRlbnQtcGM6TWJuMjJ1eEduWXkxR3B2VWRw',
+        'Connection': 'keep-alive',
+        'Content-Length': '30',
+        'Content-Type': 'application/json',
+        'DNT': '1',
+        'Host': 'class-api.3ren.cn',
+        'Origin': 'https://class.3ren.cn',
+        'Referer': 'https://class.3ren.cn/um/xicheng-schedule.do?ynXicheng=1',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53'
+                      '7.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+        'X-DT-accessToken': cookie,
+        'X-DT-clientId': 'sanren-student-pc',
+        'X-DT-Passport': '',
+        'X-DT-version': '1.7.0'
+    }
     postdata = {'weekNum': weekNum, 'gradeCode': gradeCode}
 
     classList_url = "https://class-api.3ren.cn/cms-center/xicheng/kebiao/list"
@@ -163,6 +169,16 @@ def getCourseList(weekNum,gradeCode):
 
 
 if __name__ == "__main__":
-    for grade in chooseGrade:
-        for week in chooseWeek:
-            getCourseList(week, grade)
+    cookie = input("please enter your cookie (X-DT-accessToken): ")
+    print(gradeList)
+    chooseGrade = input("请输入年级编号: ")
+    # chooseGrade = chooseGrade
+    chooseWeek = input("请输入周数：")
+    # chooseWeek = chooseWeek
+
+    # for grade in chooseGrade:
+    #     for week in chooseWeek:
+    #         print(week,grade)
+    #         getCourseList(week, grade)
+
+    getCourseList(chooseWeek, chooseGrade)
