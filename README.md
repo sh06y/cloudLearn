@@ -9,8 +9,5 @@
 
 适用网站：https://xicheng.etiantian.com/
 
-## 使用方法
 
-clone下来后在目录下新建一个**cookie.txt**，将cookie粘贴到里面
-
-下载时程序会调用IDM
+PS：为了保证下载速度，程序会调用IDM
