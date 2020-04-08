@@ -5,22 +5,11 @@ import requests
 import re
 import time
 from subprocess import call
+import easygui
 
-# downloadPath = os.getcwd()
+# 弹出文件夹选择框
+downloadPath = easygui.diropenbox()
 
-# ===============
-# X-DT-accessToken
-# cookie = ""
-
-# weekNum第几周
-# chooseWeek = [7]
-
-# 1308 初二
-# 1307 初一
-# chooseGrade = [1307]
-
-downloadPath = "C:/Users/sy/Downloads/cloud/"
-# ===============
 
 gradeList = """
 对照表：
@@ -30,18 +19,16 @@ gradeList = """
 
 """
 
-
-
-# 传统下载，太慢了，已经废弃
-def download(download_url, filepath, filename):
-    r = requests.get(download_url, stream=True)
-    p = filepath + '/' + filename
-    print("downloading...")
-    f = open(p, "wb")
-    for chunk in r.iter_content(chunk_size=2048):
-        if chunk:
-            f.write(chunk)
-    f.close()
+# 不用这个了，太慢
+# def download(download_url, filepath, filename):
+#     r = requests.get(download_url, stream=True)
+#     p = filepath + '/' + filename
+#     print("downloading...")
+#     f = open(p, "wb")
+#     for chunk in r.iter_content(chunk_size=2048):
+#         if chunk:
+#             f.write(chunk)
+#     f.close()
 
 
 def mkdir(p):
@@ -76,11 +63,12 @@ def downloadCourseFiles(data,weekNum):
     courseName = data['data']['courseName']
     # if subjectName != "数学":
     #     return 0
-    # 建立文件夹结
-    newdirPath = downloadPath + '第' + str(weekNum) + '周/'
-    newdirPath = newdirPath + subjectName + '/'
+    # 建立文件夹
+    newdirPath = downloadPath + r"\\第" + str(weekNum) + r"周\\"
     mkdir(newdirPath)
-    newdirPath = newdirPath + courseName + '/'
+    newdirPath = newdirPath + subjectName + "\\"
+    mkdir(newdirPath)
+    newdirPath = newdirPath + courseName + "\\"
     mkdir(newdirPath)
     # 课程中文件列表
     videoList = data['data']['courseResourceVOList']
@@ -177,9 +165,7 @@ if __name__ == "__main__":
     cookie = input("please enter your cookie (X-DT-accessToken): ")
     print(gradeList)
     chooseGrade = input("请输入年级编号: ")
-    # chooseGrade = chooseGrade
     chooseWeek = input("请输入周数：")
-    # chooseWeek = chooseWeek
 
     # for grade in chooseGrade:
     #     for week in chooseWeek:

@@ -5,8 +5,10 @@ import requests
 import time
 import re
 from subprocess import call
+import easygui
 
-downloadPath = "Z:/学习/学校/初中/知行云课堂/初三/数学/"
+# 弹出文件夹选择框
+downloadPath = easygui.diropenbox()
 
 subjectNum = {
     2: '数学',
@@ -14,7 +16,6 @@ subjectNum = {
     4: '物理'
 
 }
-
 
 
 
