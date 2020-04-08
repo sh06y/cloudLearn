@@ -91,7 +91,9 @@ def downloadCourseFiles(data,weekNum):
         downloadUrl = idata['resourceUrl']
 
         # 判断文件是否存在,不存在就下载
-        if not os.access(newdirPath + downloadFileName, os.F_OK):
+        if os.access(newdirPath + downloadFileName, os.F_OK):
+            print(downloadFileName, "已经有了")
+        else:
             # 调用IDM下载
             # download(downloadUrl, newdirPath, downloadFileName)
             callIDM(downloadUrl, newdirPath, downloadFileName)
