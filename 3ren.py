@@ -41,18 +41,37 @@ def mkdir(p):
 
 
 # 调用IDM下载
-def callIDM(downloadUrl, filepath, filename):
-    print("下载链接：", downloadUrl, "下载目录：", filepath, "文件名称：", filename)
-    IDMpath = "C:\Program Files (x86)\Internet Download Manager\IDMan.exe"
-    call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath, '/n'])
-    print("IDM downloading...\n")
-    # 最好加上这个
-    time.sleep(10)
+# def callIDM(downloadUrl, filepath, filename):
+#     print("下载链接：", downloadUrl, "下载目录：", filepath, "文件名称：", filename)
+#     IDMpath = r".\idm\idm.exe"
+#     a = call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath])
+#     print(a)
+#     print("IDM downloading...\n")
+#     # 最好加上这个
+#     time.sleep(5)
+
+def callAria2(path,url,name):
+    aria2 = os.getcwd() + r"\aria2\aria2.exe "
+    p=open(os.getcwd()+'/aria2/aria2.conf','r',encoding='utf-8')
+    q=open(os.getcwd()+'/aria2/aria2.conf','w',encoding='utf-8')
+    number=0
+    for i in p:   #循环打印poems的内容
+        number += 1
+        if number == 1:
+            i = 'dir=' + path + '\n'
+            q.write(i)  #把在poems中读取的内容写在poems1中
+            q.close()
+            break
+
+    order = aria2 + "--conf-path=" + os.getcwd() + r"\aria2\aria2.conf -o " + name + ' ' + url
+    os.system(order)
 
 
 # 文件名修改
 def reFilename(name):
     name = name.replace('?', '？')
+    name = name.replace('<', '[')
+    name = name.replace('>', ']')
     return name
 
 
@@ -65,10 +84,11 @@ def downloadCourseFiles(data,weekNum):
     #     return 0
     # 建立文件夹
     newdirPath = downloadPath + r"\\第" + str(weekNum) + r"周\\"
-    mkdir(newdirPath)
+    # mkdir(newdirPath)
     newdirPath = newdirPath + subjectName + "\\"
-    mkdir(newdirPath)
+    # mkdir(newdirPath)
     newdirPath = newdirPath + courseName + "\\"
+    newdirPath = reFilename(newdirPath)
     mkdir(newdirPath)
     # 课程中文件列表
     videoList = data['data']['courseResourceVOList']
@@ -83,8 +103,7 @@ def downloadCourseFiles(data,weekNum):
             print(downloadFileName, "已经有了")
         else:
             # 调用IDM下载
-            # download(downloadUrl, newdirPath, downloadFileName)
-            callIDM(downloadUrl, newdirPath, downloadFileName)
+            callAria2(newdirPath,downloadUrl,downloadFileName)
         
 
 
