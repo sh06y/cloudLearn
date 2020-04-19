@@ -44,27 +44,11 @@ def mkdir(p):
 def callIDM(downloadUrl, filepath, filename):
     print("下载链接：", downloadUrl, "下载目录：", filepath, "文件名称：", filename)
     IDMpath = r"C:\Program Files (x86)\Internet Download Manager\IDMan.exe"
-    a = call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath])
+    a = call([IDMpath, '/d', downloadUrl, '/f', filename, '/p', filepath,'/n'])
     print(a)
     print("IDM downloading...\n")
     # 最好加上这个
-    time.sleep(5)
-
-# def callAria2(path,url,name):
-#     aria2 = os.getcwd() + r"\aria2\aria2.exe "
-#     p=open(os.getcwd()+'/aria2/aria2.conf','r',encoding='utf-8')
-#     q=open(os.getcwd()+'/aria2/aria2.conf','w',encoding='utf-8')
-#     number=0
-#     for i in p:   #循环打印poems的内容
-#         number += 1
-#         if number == 1:
-#             i = 'dir=' + path + '\n'
-#             q.write(i)  #把在poems中读取的内容写在poems1中
-#             q.close()
-#             break
-
-#     order = aria2 + "--conf-path=" + os.getcwd() + r"\aria2\aria2.conf -o " + name + ' ' + url
-#     os.system(order)
+    time.sleep(8)
 
 
 # 文件名修改
@@ -73,7 +57,6 @@ def reFilename(name):
     name = name.replace('<', '[')
     name = name.replace('>', ']')
     name = name.replace('/', ' ')
-    name = name.replace('\\', ' ')
     return name
 
 
